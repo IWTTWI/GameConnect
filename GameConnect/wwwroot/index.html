@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #fff;
+            min-height: 100vh;}
+        .container {
+            display: flex;
+            min-height: 100vh;}
+        .sidebar {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);}
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;}
+            .logo h2 {
+                color: #9b59b6;
+                font-size: 24px;}
+        .nav-menu {
+            list-style: none;}
+            .nav-menu li {
+                margin-bottom: 10px;}
+            .nav-menu button {
+                width: 100%;
+                padding: 12px 20px;
+                background: transparent;
+                border: none;
+                color: #fff;
+                text-align: left;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: all 0.3s;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;}
+                .nav-menu button:hover,
+                .nav-menu button.active {
+                    background: #9b59b6;
+                    transform: translateX(5px);}
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;}
+        .content-section {
+            display: none;}
+            .content-section.active {
+                display: block;
+                animation: fadeIn 0.3s;}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);}
+            to {
+                opacity: 1;
+                transform: translateY(0);}}
+        h1 {
+            margin-bottom: 30px;
+            color: #9b59b6;}
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;}
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);}
+            .stat-card i {
+                font-size: 48px;
+                color: #9b59b6;
+                margin-bottom: 15px;}
+            .stat-card h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+                opacity: 0.8;}
+            .stat-card p {
+                font-size: 32px;
+                font-weight: bold;}
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;}
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;}
+            .product-card:hover {
+                transform: translateY(-5px);}
+            .product-card h3 {
+                color: #9b59b6;
+                margin-bottom: 10px;}
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;}
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin: 5px;}
+        .btn-primary {
+            background: #9b59b6;
+            color: white;}
+            .btn-primary:hover {
+                background: #8e44ad;
+                transform: translateY(-2px);}
+        .btn-danger {
+            background: #e74c3c;
+            color: white;}
+        .profile-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);}
+        .profile-info {
+            margin-top: 20px;}
+        .profile-stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;}
+            .profile-stat i {
+                color: #9b59b6;
+                font-size: 24px;
+                width: 30px;}
+        .socials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;}
+        .social-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            display: block;}
+            .social-card:hover {
+                background: #9b59b6;
+                transform: translateY(-5px);}
+            .social-card i {
+                font-size: 48px;
+                margin-bottom: 10px;
+                display: block;}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);}
+        .modal-content {
+            background: #2d2d44;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;}
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #9b59b6;}
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: inherit;}
+            input:focus, textarea:focus, select:focus {
+                outline: none;
+                border-color: #9b59b6;}
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;}
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;}
+            .sidebar {
+                width: 100%;}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h2> Midnight Shop</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><button class="active" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Главная</button></li>
+                <li><button onclick="showSection('products')"><i class="fas fa-shopping-cart"></i> Товары</button></li>
+                <li><button onclick="showSection('profile')"><i class="fas fa-user"></i> Профиль</button></li>
+                <li><button onclick="showSection('socials')"><i class="fas fa-share-alt"></i> Соцсети</button></li>
+                <li><button onclick="showSection('reviews')"><i class="fas fa-comments"></i> Отзывы</button></li>
+                <li><button onclick="showSection('support')"><i class="fas fa-headset"></i> Поддержка</button></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <section id="dashboard" class="content-section active">
+                <h1>Добро пожаловать в Midnight Shop</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>Всего товаров</h3>
+                        <p id="total-products">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-coins"></i>
+                        <h3>Midnight Coins</h3>
+                        <p id="user-coins">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Баланс</h3>
+                        <p id="user-balance">0 ₽</p>
+                    </div>
+                </div>
+            </section>
+            <section id="products" class="content-section">
+                <div class="section-header">
+                    <h1><i class="fas fa-shopping-cart"></i> Товары</h1>
+                    <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Добавить</button>
+                </div>
+                <div id="products-list" class="products-grid"></div>
+            </section>
+            <section id="profile" class="content-section">
+                <h1><i class="fas fa-user"></i> Профиль</h1>
+                <div class="profile-card">
+                    <div class="profile-info">
+                        <h2 id="profile-name">Гость</h2>
+                        <p id="profile-username">@username</p>
+                        <div class="profile-stat">
+                            <i class="fas fa-wallet"></i>
+                            <span>Баланс: <strong id="profile-balance">0</strong> ₽</span>
+                        </div>
+                        <div class="profile-stat">
+                            <i class="fas fa-coins"></i>
+                            <span>Midnight Coins: <strong id="profile-coins">0</strong></span>
+                        </div>
+                        <div class="profile-stat">
+                            <i class="fas fa-calendar"></i>
+                            <span>Регистрация: <strong id="profile-date">-</strong></span>
+                        </div>
+                        <div class="profile-stat">
+                            <i class="fas fa-box"></i>
+                            <span>Товаров: <strong id="profile-items">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="socials" class="content-section">
+                <h1><i class="fas fa-share-alt"></i> Наши социальные сети</h1>
+                <div id="socials-list" class="socials-grid"></div>
+            </section>
+            <section id="reviews" class="content-section">
+                <h1><i class="fas fa-comments"></i> Отзывы</h1>
+                <div class="stat-card">
+                    <p>
+                        ⭐⭐⭐⭐⭐<br><br>
+                        "Отличный магазин! Быстрая доставка и хорошие цены."<br><br>
+                        - @user1
+                    </p>
+                </div>
+            </section>
+            <section id="support" class="content-section">
+                <h1><i class="fas fa-headset"></i> Поддержка</h1>
+                <div class="stat-card">
+                    <p>
+                        <i class="fas fa-envelope"></i> Email: support@midnightshop.com<br><br>
+                        <i class="fab fa-telegram"></i> Telegram: @midnight_support<br><br>
+                        <i class="fas fa-clock"></i> Работаем 24/7
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <h2>Добавить товар</h2>
+            <input type="text" id="product-name" placeholder="Название">
+            <textarea id="product-description" placeholder="Описание"></textarea>
+            <input type="number" id="product-price" placeholder="Цена (₽)" step="0.01">
+            <input type="number" id="product-coins" placeholder="Цена (Coins)">
+            <select id="product-type">
+                <option value="currency">Игровая валюта</option>
+                <option value="boost">Бусты</option>
+                <option value="other">Другое</option>
+            </select>
+            <input type="url" id="product-image" placeholder="URL изображения">
+            <button class="btn btn-primary" onclick="saveProduct()">Сохранить</button>
+        </div>
+    </div>
+    <script>
+        const API = '/api';
+        let currentUserId = 1; 
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-menu button').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            if (sectionId === 'products') loadProducts();
+            if (sectionId === 'socials') loadSocials();
+            if (sectionId === 'profile') loadProfile();
+            if (sectionId === 'dashboard') loadDashboard();}
+        async function loadProducts() {
+            const res = await fetch(`${API}/products`);
+            const products = await res.json();
+            const container = document.getElementById('products-list');
+            container.innerHTML = products.map(p => `
+                    <div class="product-card">
+                        <h3>${p.name}</h3>
+                        <p>${p.description}</p>
+                        <div class="product-price">
+                            <span>${p.price} ₽</span>
+                            <span>${p.priceInCoins} 🌙</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="buyProduct(${p.id}, 'money')">Купить за ₽</button>
+                        <button class="btn btn-primary" onclick="buyProduct(${p.id}, 'coins')">Купить за Coins</button>
+                        <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Удалить</button>
+                    </div>
+                `).join('');
+            document.getElementById('total-products').textContent = products.length;}
+        async function loadSocials() {
+            const res = await fetch(`${API}/socials`);
+            const socials = await res.json();
+            document.getElementById('socials-list').innerHTML = socials.map(s => `
+                    <a href="${s.url}" target="_blank" class="social-card">
+                        <i class="${s.iconClass}"></i>
+                        <span>${s.name}</span>
+                    </a>
+                `).join('');}
+        async function loadProfile() {
+            const res = await fetch(`${API}/users/${currentUserId}`);
+            if (res.ok) {
+                const user = await res.json();
+                document.getElementById('profile-name').textContent = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Пользователь';
+                document.getElementById('profile-username').textContent = `@${user.username}`;
+                document.getElementById('profile-balance').textContent = user.balance;
+                document.getElementById('profile-coins').textContent = user.midnightCoins;
+                document.getElementById('profile-date').textContent = new Date(user.registeredAt).toLocaleDateString();
+                document.getElementById('profile-items').textContent = user.items?.length || 0;
+            } else {
+                await fetch(`${API}/users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'user' + currentUserId, balance: 1000, midnightCoins: 500 })});
+                loadProfile();}}
+        async function loadDashboard() {
+            await loadProfile();}
+        async function buyProduct(productId, paymentType) {
+            const res = await fetch(`${API}/users/${currentUserId}/purchase?productId=${productId}&paymentType=${paymentType}`, {
+                method: 'POST'
+            });
+            if (res.ok) {
+                alert('Покупка успешна!');
+                loadProfile();
+            } else {
+                const error = await res.text();
+                alert('Ошибка: ' + error);}}
+        async function deleteProduct(id) {
+            if (confirm('Удалить товар?')) {
+                await fetch(`${API}/products/${id}`, { method: 'DELETE' });
+                loadProducts();}}
+        function openProductModal() {
+            document.getElementById('product-modal').style.display = 'block';}
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';}
+        async function saveProduct() {
+            const product = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                priceInCoins: parseInt(document.getElementById('product-coins').value),
+                type: document.getElementById('product-type').value,
+                imageUrl: document.getElementById('product-image').value,
+                isAvailable: true};
+            await fetch(`${API}/products`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)});
+            closeProductModal();
+            loadProducts();}
+        window.onload = () => loadDashboard();
+    </script>
+</body>
+</html>
